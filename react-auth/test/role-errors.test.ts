@@ -3,11 +3,12 @@
 import { describe, expect, it } from 'vitest'
 
 import {
-	LastPrivilegedError,
-	RoleBeyondReachError,
 	RoleChangedError,
+	RoleNotGrantableError,
 	RoleRefusedError,
 	RoleUnknownError,
+	SelfRoleError,
+	UserNotEditableError,
 	ValidationError,
 	createUser,
 	invite,
@@ -46,37 +47,38 @@ const writes = [
 	},
 ]
 
+const typedErrors = [
+	{
+		title: 'RoleUnknownError for a role nobody declared',
+		type: RoleUnknownError,
+		status: 422,
+		body: { error: 'unknown role', code: 'role_unknown', meta: { field: 'role' } },
+	},
+	{
+		title: 'UserNotEditableError for an account the reader may not edit',
+		type: UserNotEditableError,
+		status: 403,
+		body: { error: 'Sorry, you are not allowed to edit this user.', code: 'user_not_editable' },
+	},
+	{
+		title: 'RoleNotGrantableError for a role the reader may not give',
+		type: RoleNotGrantableError,
+		status: 403,
+		body: { error: 'Sorry, you are not allowed to give users that role.', code: 'role_not_grantable' },
+	},
+]
+
 describe.each(writes)('$name', ({ failure, handler, run }) => {
-	it('throws RoleUnknownError for a role nobody declared', async () => {
-		server.use(
-			handler(() =>
-				HttpResponse.json(
-					{ error: 'unknown role', code: 'role_unknown', meta: { field: 'role' } },
-					{ status: 422 },
-				),
-			),
-		)
+	it.each(typedErrors)('throws $title', async ({ type, status, body }) => {
+		server.use(handler(() => HttpResponse.json(body, { status })))
 
 		const attempt = run()
 
-		await expect(attempt).rejects.toBeInstanceOf(RoleUnknownError)
-		await expect(attempt).rejects.toThrow('unknown role')
+		await expect(attempt).rejects.toBeInstanceOf(type)
+		await expect(attempt).rejects.toMatchObject({ code: body.code, message: body.error })
 	})
 
-	it('throws RoleBeyondReachError for a role beyond the actor', async () => {
-		server.use(
-			handler(() =>
-				HttpResponse.json({ error: 'role beyond reach', code: 'role_beyond_reach' }, { status: 403 }),
-			),
-		)
-
-		const attempt = run()
-
-		await expect(attempt).rejects.toBeInstanceOf(RoleBeyondReachError)
-		await expect(attempt).rejects.toThrow('role beyond reach')
-	})
-
-	it.each(['constructor', 'toString', '__proto__', 'hasOwnProperty'])(
+	it.each(['role_beyond_reach', 'constructor', 'toString', '__proto__', 'hasOwnProperty'])(
 		'answers the code %s as a plain error naming the status',
 		async (code) => {
 			server.use(handler(() => HttpResponse.json({ error: 'odd', code }, { status: 403 })))
@@ -102,7 +104,10 @@ describe.each(writes.filter(({ name }) => name === 'setUserRole' || name === 'se
 			const attempt = run()
 
 			await expect(attempt).rejects.toBeInstanceOf(RoleChangedError)
-			await expect(attempt).rejects.toThrow('the role changed, reload the account')
+			await expect(attempt).rejects.toMatchObject({
+				code: 'role_changed',
+				message: 'the role changed, reload the account',
+			})
 		})
 	},
 )
@@ -121,61 +126,48 @@ describe('RoleUnknownError', () => {
 	})
 })
 
+const insufficient = { error: 'role insufficient', code: 'role_insufficient' }
+
+const plainErrors = [
+	{
+		title: 'createUser answering any other 403',
+		handler: (response: () => Response) => http.post('/api/users', response),
+		run: () => createUser({ email: 'maria@example.com', name: 'Maria Perez', password: 'correct horse battery' }),
+		status: 403,
+		body: insufficient,
+		failure: '403',
+		wrongTypes: [RoleRefusedError],
+	},
+	{
+		title: 'invite answering a role_insufficient 403',
+		handler: (response: () => Response) => http.post('/api/users/invite', response),
+		run: () => invite({ email: 'maria@example.com', name: 'Maria Perez' }),
+		status: 403,
+		body: insufficient,
+		failure: 'inviting failed with status 403',
+		wrongTypes: [RoleRefusedError],
+	},
+	{
+		title: 'setUserDisabled answering a self_role_refused 422',
+		handler: (response: () => Response) => http.patch('/api/users/:id', response),
+		run: () => setUserDisabled(id, true),
+		status: 422,
+		body: { error: 'cannot change your own role', code: 'self_role_refused' },
+		failure: 'updating user failed with status 422',
+		wrongTypes: [ValidationError, SelfRoleError],
+	},
+]
+
 describe('an error carrying another code', () => {
-	it('keeps createUser answering any other 403 as a plain error', async () => {
-		server.use(
-			http.post('/api/users', () =>
-				HttpResponse.json({ error: 'role insufficient', code: 'role_insufficient' }, { status: 403 }),
-			),
-		)
+	it.each(plainErrors)('keeps $title as a plain error', async ({ handler, run, status, body, failure, wrongTypes }) => {
+		server.use(handler(() => HttpResponse.json(body, { status })))
 
-		const attempt = createUser({ email: 'maria@example.com', name: 'Maria Perez', password: 'correct horse battery' })
+		const attempt = run()
 
-		await expect(attempt).rejects.toThrow('403')
-		await expect(attempt).rejects.not.toBeInstanceOf(RoleBeyondReachError)
-	})
-
-	it('keeps invite answering a role_insufficient 403 as a plain error', async () => {
-		server.use(
-			http.post('/api/users/invite', () =>
-				HttpResponse.json({ error: 'role insufficient', code: 'role_insufficient' }, { status: 403 }),
-			),
-		)
-
-		const attempt = invite({ email: 'maria@example.com', name: 'Maria Perez' })
-
-		await expect(attempt).rejects.toThrow('inviting failed with status 403')
-		await expect(attempt).rejects.not.toBeInstanceOf(RoleRefusedError)
-	})
-
-	it('keeps setUserDisabled answering a role_insufficient 403 as a plain error', async () => {
-		server.use(
-			http.patch('/api/users/:id', () =>
-				HttpResponse.json({ error: 'role insufficient', code: 'role_insufficient' }, { status: 403 }),
-			),
-		)
-
-		const attempt = setUserDisabled(id, true)
-
-		await expect(attempt).rejects.toThrow('updating user failed with status 403')
-		await expect(attempt).rejects.not.toBeInstanceOf(RoleRefusedError)
-	})
-
-	it('keeps setUserDisabled answering a last_privileged_refused 422 as a plain error', async () => {
-		server.use(
-			http.patch('/api/users/:id', () =>
-				HttpResponse.json(
-					{ error: 'the last privileged account must remain', code: 'last_privileged_refused' },
-					{ status: 422 },
-				),
-			),
-		)
-
-		const attempt = setUserDisabled(id, true)
-
-		await expect(attempt).rejects.toThrow('updating user failed with status 422')
-		await expect(attempt).rejects.not.toBeInstanceOf(ValidationError)
-		await expect(attempt).rejects.not.toBeInstanceOf(LastPrivilegedError)
+		await expect(attempt).rejects.toThrow(failure)
+		for (const type of wrongTypes) {
+			await expect(attempt).rejects.not.toBeInstanceOf(type)
+		}
 	})
 
 	it('keeps setUserDisabled answering an unreadable error body by its status', async () => {
