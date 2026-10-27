@@ -17,7 +17,9 @@ const ada = {
 	email: 'ada@example.com',
 	name: 'Ada Lovelace',
 	disabled: false,
+	confirmed: true,
 	created_at: '2026-07-06T10:00:00Z',
+	editable: true,
 }
 
 describe('fetchUsers', () => {

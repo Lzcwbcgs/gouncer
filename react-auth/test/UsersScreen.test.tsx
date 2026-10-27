@@ -13,14 +13,18 @@ const ada = {
 	email: 'ada@example.com',
 	name: 'Ada Lovelace',
 	disabled: false,
+	confirmed: true,
 	created_at: '2026-07-06T10:00:00Z',
+	editable: true,
 }
 const grace = {
 	id: '0198b2f0-0000-7000-8000-000000000002',
 	email: 'grace@example.com',
 	name: 'Grace Hopper',
 	disabled: false,
+	confirmed: true,
 	created_at: '2026-07-06T11:00:00Z',
+	editable: true,
 }
 
 function renderUsers() {
