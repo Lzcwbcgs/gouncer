@@ -39,6 +39,15 @@ test('hands the users list out on its own entry, so a sign in only app never res
 	expect(wpds).not.toHaveProperty('usersListDefaults')
 })
 
+test('drops the old users table and the invite only new user screen, which no app mounts', () => {
+	expect(wpds).not.toHaveProperty('UsersScreen')
+	expect(wpds).not.toHaveProperty('NewUserScreen')
+})
+
+test('drops the rules of the old users table from the stylesheet', () => {
+	expect(readFileSync(resolve('src/wpds/style.css'), 'utf8')).not.toContain('.gopherium-users')
+})
+
 test.each(listPeers)('declares %s as an optional peer on the window %s', (name, window) => {
 	expect(manifest.peerDependencies[name]).toBe(window)
 	expect(manifest.peerDependenciesMeta[name]).toEqual({ optional: true })
