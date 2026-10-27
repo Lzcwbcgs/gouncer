@@ -2,9 +2,9 @@
 
 import { useMutation } from '@tanstack/react-query'
 import { __, _x } from '@wordpress/i18n'
-import { Button, CheckboxControl, Field, Input, Text } from '@wordpress/ui'
-import { useEffect, useEffectEvent, useId, useRef, useState } from 'react'
-import type { ComponentProps, KeyboardEvent, ReactNode } from 'react'
+import { Button, Field, Input, Text } from '@wordpress/ui'
+import { useState } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 import type { Account } from '../account.js'
 import { passwordHint } from '../admin/fieldError.js'
@@ -12,36 +12,12 @@ import { ValidationError } from '../api.js'
 import { DOMAIN } from '../domain.js'
 import { SetupClosedError, SetupCodeError, SiteStartingError, createFirstAccount, isSetupOpen } from '../setup.js'
 import type { FirstAccount } from '../setup.js'
-import { generatePassword } from './password.js'
+import { PasswordField } from './PasswordField.js'
 import { setupRefusal } from './setupWords.js'
-import { disallowedWords, levelOf, loadMeter } from './strength.js'
-import type { Meter, Tone } from './strength.js'
+import { usePasswordField } from './usePasswordField.js'
 
 /** The length of the password the step starts with, unless the wizard asks for another. */
 const GENERATED_PASSWORD_LENGTH = 18
-
-/** The word the meter box holds for an empty password. */
-const NO_WORD = '\u00a0'
-
-/** The arrow drawn before the Caps Lock words. */
-const CAPS_ARROW = (
-	<span aria-hidden="true" className="gopherium-setup__caps-icon">
-		<svg viewBox="0 0 24 26" fill="currentColor" stroke="currentColor" strokeWidth="0.5">
-			<path d="M12 5L19 15H16V19H8V15H5L12 5Z" />
-			<rect x="8" y="21" width="8" height="1.5" rx="0.75" />
-		</svg>
-	</span>
-)
-
-/** What the meter knows of the password: nothing yet, an empty field, or a score from -1 to 4. */
-type Strength = number | 'empty' | undefined
-
-/** The password, what the meter knows of it and whether its weak use is confirmed. */
-interface HeldPassword {
-	password: string
-	strength: Strength
-	confirmed: boolean
-}
 
 /** The wizard's words for an error the step does not know. */
 type ErrorWords = (error: unknown) => ReactNode | undefined
@@ -139,125 +115,14 @@ async function reportRefusal(error: Error, hooks: RefusalHooks): Promise<void> {
 }
 
 /**
- * Returns what the meter knows of a password at the moment it is scored.
- * @param password - The password as typed.
- * @param meter - The meter, once it has landed.
- * @param words - Reads the words the meter treats as easy to guess.
- * @returns The strength, -1 while the meter has not landed.
- */
-function strengthOf(password: string, meter: Meter | undefined, words: () => string[]): Strength {
-	if (password.trim() === '') {
-		return 'empty'
-	}
-	return meter === undefined ? -1 : meter(password, words())
-}
-
-/**
- * Returns the meter's tone for a strength.
- * @param strength - What the meter knows of the password.
- * @returns The tone, or undefined while nothing was scored or the field is empty.
- */
-function toneOf(strength: Strength): Tone | undefined {
-	return typeof strength === 'number' ? levelOf(strength).tone : undefined
-}
-
-/**
- * Reports whether a password this strong needs its use confirmed.
- * @param strength - What the meter knows of the password.
- * @returns True for the very weak, weak and unknown levels.
- */
-function needsConfirmation(strength: Strength): boolean {
-	const tone = toneOf(strength)
-	return tone === 'short' || tone === 'bad'
-}
-
-/**
- * Returns the word the meter box holds.
- * @param strength - What the meter knows of the password.
- * @returns Nothing before scoring, a no-break space for an empty field, or the level's word.
- */
-function meterWord(strength: Strength): string {
-	if (strength === undefined) {
-		return ''
-	}
-	return strength === 'empty' ? NO_WORD : levelOf(strength).word
-}
-
-/**
- * Returns a class with its tone modifier when it has a tone.
- * @param block - The class without a tone.
- * @param tone - The tone to add, if any.
- * @returns The class names.
- */
-function withTone(block: string, tone: Tone | undefined): string {
-	return tone === undefined ? block : `${block} ${block}--${tone}`
-}
-
-/**
- * Reports whether a key types a character, the only keys Caps Lock is read from.
- * @param event - The key the person pressed.
- * @returns True for a printable key pressed without Control, Alt or Meta.
- */
-function isPrintable(event: KeyboardEvent): boolean {
-	return event.key.length === 1 && !event.ctrlKey && !event.altKey && !event.metaKey
-}
-
-/**
- * Returns the words the meter treats as easy to guess, read from the fields when it scores.
- * @param name - The name as typed.
- * @param email - The email as typed.
- * @param userInputs - The wizard's own values, if it gave any.
- * @returns The distinct words of four characters or more.
- */
-function wordsFor(name: string, email: string, userInputs: string[] = []): string[] {
-	return disallowedWords([document.title, location.href, name, email, ...userInputs])
-}
-
-/**
  * Reports whether the step may send the account, the meter's confirmation included.
  * @param name - The name as typed.
  * @param email - The email as typed.
- * @param held - The password and what the meter knows of it.
+ * @param passwordReady - Whether the password may be sent.
  * @returns True once every field holds more than spaces and a weak password is confirmed.
  */
-function isReady(name: string, email: string, held: HeldPassword): boolean {
-	return (
-		name.trim() !== '' &&
-		email.trim() !== '' &&
-		held.password.trim() !== '' &&
-		(held.confirmed || !needsConfirmation(held.strength))
-	)
-}
-
-/**
- * Holds the password, scores it when the meter lands and on each change, and keeps the weak use confirmation.
- * @param length - The length of the password the step starts with, if the wizard chose one.
- * @param words - Reads the words the meter treats as easy to guess.
- * @returns The password, its strength, the confirmation and their setters.
- */
-function usePassword(length: number | undefined, words: () => string[]) {
-	const [password, setPassword] = useState(() => generatePassword(length ?? GENERATED_PASSWORD_LENGTH))
-	const [strength, setStrength] = useState<Strength>(undefined)
-	const [confirmed, setConfirmed] = useState(false)
-	const meter = useRef<Meter>(undefined)
-	const landed = useEffectEvent((loaded: Meter) => {
-		meter.current = loaded
-		setStrength(strengthOf(password, loaded, words))
-	})
-	useEffect(() => {
-		loadMeter().then(
-			(loaded) => landed(loaded),
-			() => undefined,
-		)
-	}, [])
-	const change = (value: string) => {
-		setPassword(value)
-		setStrength(strengthOf(value, meter.current, words))
-		if (value.trim() === '') {
-			setConfirmed(false)
-		}
-	}
-	return { password, strength, confirmed, change, setConfirmed }
+function isReady(name: string, email: string, passwordReady: boolean): boolean {
+	return name.trim() !== '' && email.trim() !== '' && passwordReady
 }
 
 /**
@@ -346,145 +211,6 @@ function TextRow({ label, help, ...field }: { label: string; help?: string } & C
 }
 
 /**
- * Renders the button that shows or hides the password.
- * @param masked - Whether the password is hidden.
- * @param onToggle - Called when the button is pressed.
- * @returns The toggle element.
- */
-function MaskToggle({ masked, onToggle }: { masked: boolean; onToggle: () => void }) {
-	const show = __('Show', DOMAIN)
-	const hide = __('Hide', DOMAIN)
-	return (
-		<Button
-			type="button"
-			variant="outline"
-			className="gopherium-setup__toggle"
-			data-other-word={masked ? hide : show}
-			aria-label={masked ? __('Show password', DOMAIN) : __('Hide password', DOMAIN)}
-			onClick={onToggle}
-		>
-			{masked ? show : hide}
-		</Button>
-	)
-}
-
-/**
- * Renders the box that shows the meter's word in its tone.
- * @param id - The id the password field is described by.
- * @param strength - What the meter knows of the password.
- * @returns The meter box element.
- */
-function MeterBox({ id, strength }: { id: string; strength: Strength }) {
-	return (
-		<div id={id} aria-live="polite" className={withTone('gopherium-setup__meter', toneOf(strength))}>
-			{meterWord(strength)}
-		</div>
-	)
-}
-
-/**
- * Renders the password row with the meter box, the Caps Lock line and the line asking to store it.
- * @param password - The password as typed.
- * @param strength - What the meter knows of the password.
- * @param masked - Whether the password is hidden.
- * @param readOnly - Whether the password stays as sent while the account is created.
- * @param onPasswordChange - Called with the password on every change.
- * @param onToggle - Called when the show or hide button is pressed.
- * @returns The row element.
- */
-function PasswordRow({
-	password,
-	strength,
-	masked,
-	readOnly,
-	onPasswordChange,
-	onToggle,
-}: {
-	password: string
-	strength: Strength
-	masked: boolean
-	readOnly: boolean
-	onPasswordChange: (password: string) => void
-	onToggle: () => void
-}) {
-	const [capsLock, setCapsLock] = useState(false)
-	const meterId = useId()
-	const helpId = useId()
-	return (
-		<Field.Root className="gopherium-setup__row" render={<div />}>
-			<Field.Label className="gopherium-setup__label">{__('Password', DOMAIN)}</Field.Label>
-			<div>
-				<div className="gopherium-setup__password">
-					<div className="gopherium-setup__password-field">
-						<Input
-							type={masked ? 'password' : 'text'}
-							className={withTone('gopherium-setup__input', toneOf(strength))}
-							value={password}
-							readOnly={readOnly}
-							onChange={(event) => onPasswordChange(event.target.value)}
-							onKeyDown={(event) => {
-								if (isPrintable(event)) {
-									setCapsLock(event.getModifierState('CapsLock'))
-								}
-							}}
-							autoComplete="new-password"
-							spellCheck={false}
-							aria-describedby={`${meterId} ${helpId}`}
-						/>
-						<MeterBox id={meterId} strength={strength} />
-						<div aria-live="assertive" className="gopherium-setup__caps">
-							{capsLock ? (
-								<>
-									{CAPS_ARROW}
-									<span className="gopherium-setup__caps-text">{__('Caps lock is on.', DOMAIN)}</span>
-								</>
-							) : null}
-						</div>
-					</div>
-					<MaskToggle masked={masked} onToggle={onToggle} />
-				</div>
-				<Text render={<p id={helpId} className="gopherium-setup__help" />}>
-					<strong>{__('Important:', DOMAIN)}</strong>{' '}
-					{__('You will need this password to log\u00a0in. Please store it in a secure location.', DOMAIN)}
-				</Text>
-			</div>
-		</Field.Root>
-	)
-}
-
-/**
- * Renders the row asking to confirm the use of a weak password.
- * @param checked - Whether the use is confirmed.
- * @param readOnly - Whether the choice stays as sent while the account is created.
- * @param onCheckedChange - Called with the new choice.
- * @returns The row element.
- */
-function ConfirmRow({
-	checked,
-	readOnly,
-	onCheckedChange,
-}: {
-	checked: boolean
-	readOnly: boolean
-	onCheckedChange: (checked: boolean) => void
-}) {
-	return (
-		<div className="gopherium-setup__row">
-			<Field.VisualLabel className="gopherium-setup__label">{__('Confirm Password', DOMAIN)}</Field.VisualLabel>
-			<div>
-				<CheckboxControl
-					className="gopherium-setup__checkbox"
-					label={__('Confirm use of weak password', DOMAIN)}
-					checked={checked}
-					readOnly={readOnly}
-					onCheckedChange={(next) => onCheckedChange(next)}
-				/>
-			</div>
-		</div>
-	)
-}
-
-/**
  * Renders the sentence and the button that hand the created account to the wizard again.
  * @param pending - Whether the hand-over runs.
  * @param onRetry - Called when the button is pressed.
@@ -545,18 +271,20 @@ export function SetupAccountStep({
 }) {
 	const [name, setName] = useState('')
 	const [email, setEmail] = useState('')
-	const [masked, setMasked] = useState(false)
-	const held = usePassword(generatedPasswordLength, () => wordsFor(name, email, userInputs))
+	const password = usePasswordField({
+		length: generatedPasswordLength ?? GENERATED_PASSWORD_LENGTH,
+		userInputs: [name, email, ...(userInputs ?? [])],
+	})
 	const account = useFirstAccount(
-		() => (onSubmit ?? createFirstAccount)({ code, email: email.trim(), name: name.trim(), password: held.password }),
+		() => (onSubmit ?? createFirstAccount)({ code, email: email.trim(), name: name.trim(), password: password.value }),
 		onCreated,
-		() => setMasked(false),
+		() => password.mask(false),
 		{ onCodeRefused, onClosed },
 	)
 	if (account.retry !== undefined) {
 		return <HandoffFailure pending={account.retrying} onRetry={account.retry} />
 	}
-	const canSend = !account.locked && isReady(name, email, held)
+	const canSend = !account.locked && isReady(name, email, password.ready)
 	return (
 		<form
 			className="gopherium-setup"
@@ -566,7 +294,7 @@ export function SetupAccountStep({
 				if (!canSend) {
 					return
 				}
-				setMasked(true)
+				password.mask(true)
 				account.submit()
 			}}
 		>
@@ -580,17 +308,16 @@ export function SetupAccountStep({
 				readOnly={account.locked}
 				onChange={(event) => setName(event.target.value)}
 			/>
-			<PasswordRow
-				password={held.password}
-				strength={held.strength}
-				masked={masked}
+			<PasswordField
+				password={password}
 				readOnly={account.locked}
-				onPasswordChange={held.change}
-				onToggle={() => setMasked(!masked)}
+				help={
+					<>
+						<strong>{__('Important:', DOMAIN)}</strong>{' '}
+						{__('You will need this password to log\u00a0in. Please store it in a secure location.', DOMAIN)}
+					</>
+				}
 			/>
-			{needsConfirmation(held.strength) ? (
-				<ConfirmRow checked={held.confirmed} readOnly={account.locked} onCheckedChange={held.setConfirmed} />
-			) : null}
 			<TextRow
 				label={__('Your Email', DOMAIN)}
 				type="email"
