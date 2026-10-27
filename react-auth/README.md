@@ -105,6 +105,9 @@ const list = useListView<View>(usersListDefaults({ perPage: settings?.pageSize }
 />
 ```
 
+- An app with no page size setting passes a fixed `perPage` to
+  `usersListDefaults`. The list shows as loading until it has a page
+  size or `sizesFailed`.
 - A row the server marks `editable: false`, and the reader's own row,
   offer no action.
 - `errorMessages` gives words to the error codes only the app's
