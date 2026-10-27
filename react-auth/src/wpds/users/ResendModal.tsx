@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { ConfirmBody, useCloseWhileOpen, useToaster } from '@gopherium/godmin'
+import { useMutation } from '@tanstack/react-query'
 import type { RenderModalProps } from '@wordpress/dataviews'
 import { __, sprintf } from '@wordpress/i18n'
 import { Button, InputControl, Stack, Text } from '@wordpress/ui'
@@ -41,25 +42,22 @@ export function ResendModal({
 }: RenderModalProps<Account> & { errorMessages: ErrorMessages }) {
 	const toaster = useToaster()
 	const close = useCloseWhileOpen(closeModal)
-	const [busy, setBusy] = useState(false)
 	const [link, setLink] = useState<string>()
-	const send = async () => {
-		setBusy(true)
-		try {
-			const sent = await resendInvite(account.email)
-			if (!sent.delivered) {
-				setLink(sent.activation_link)
+	const resend = useMutation({
+		mutationFn: () => resendInvite(account.email),
+		onSuccess: (sent) => {
+			if (sent.delivered) {
+				toaster.show(sprintf(__('Invitation sent to "%(name)s".', DOMAIN), { name: account.name }))
+				close()
 				return
 			}
-			toaster.show(sprintf(__('Invitation sent to "%(name)s".', DOMAIN), { name: account.name }))
-			close()
-		} catch (error) {
+			setLink(sent.activation_link)
+		},
+		onError: (error) => {
 			toaster.show(errorMessageOf(error, errorMessages, __('The invitation could not be sent.', DOMAIN)))
 			close()
-		} finally {
-			setBusy(false)
-		}
-	}
+		},
+	})
 	if (link !== undefined) {
 		return <HandDelivery link={link} onDone={closeModal} />
 	}
@@ -68,8 +66,8 @@ export function ResendModal({
 		<ConfirmBody
 			confirmLabel={__('Resend invitation', DOMAIN)}
 			cancelLabel={__('Cancel', DOMAIN)}
-			busy={busy}
-			onConfirm={() => void send()}
+			busy={resend.isPending}
+			onConfirm={() => resend.mutate()}
 			onCancel={closeModal}
 		>
 			{sprintf(question, { name: account.name, email: account.email })}

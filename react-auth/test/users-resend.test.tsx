@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
 import { beforeEach, expect, onTestFinished, test, vi } from 'vitest'
 
+import { sessionQueryKey } from '../src/session'
 import { resendDelivered, resendRefused, resendUndelivered, server } from '../src/testing'
 import { accountOf, holding, longName, menuOf, renderUsers, rowOf, signedIn, toast } from './users-harness'
 
@@ -194,6 +195,16 @@ test('closes only itself once its write ends, never a resend opened on the row s
 
 	await toast('Invitation sent to "Maria Perez".')
 	expect(screen.getByRole('dialog', { name: 'Resend invitation' })).toBeInTheDocument()
+})
+
+test('signs the reader out when the session ended before the resend', async () => {
+	server.use(http.post('/api/users/invite/resend', () => HttpResponse.json({ error: 'no session' }, { status: 401 })))
+	const { client } = renderUsers()
+	const modal = await openResend()
+
+	await userEvent.click(modal.getByRole('button', { name: 'Resend invitation' }))
+
+	await waitFor(() => expect(client.getQueryData(sessionQueryKey)).toBeNull())
 })
 
 test("says in a toast why a resend failed, in WordPress's words for the error code, the confirm closed", async () => {

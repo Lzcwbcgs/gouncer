@@ -3,7 +3,7 @@
 import { AdminRoot, Toaster } from '@gopherium/godmin'
 import { listSearch, useListView } from '@gopherium/godmin/router'
 import { installTestEnvironment } from '@gopherium/godmin/testing'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import {
 	Outlet,
 	RouterProvider,
@@ -20,6 +20,7 @@ import { expect } from 'vitest'
 
 import type { Account } from '../src/account'
 import type { User } from '../src/api'
+import { createAuthQueryClient } from '../src/queryClient'
 import { seedSession, server, userWithCapabilities } from '../src/testing'
 import { UsersPage, usersListDefaults } from '../src/wpds/users'
 import type { UsersPageProps } from '../src/wpds/users'
@@ -102,9 +103,7 @@ export interface RenderOptions extends Partial<Omit<UsersPageProps, 'list'>> {
 
 export function renderUsers(options: RenderOptions = {}) {
 	const { at = '/users', session = reader, perPage = 20, columnIds, ...props } = options
-	const client = new QueryClient({
-		defaultOptions: { queries: { retry: false, staleTime: Infinity }, mutations: { retry: false } },
-	})
+	const client = createAuthQueryClient({ queries: { retry: false, staleTime: Infinity }, mutations: { retry: false } })
 	seedSession(client, session)
 	function Mount() {
 		const list = useListView<View>(usersListDefaults({ perPage: perPage ?? undefined, columns: columnIds }))
