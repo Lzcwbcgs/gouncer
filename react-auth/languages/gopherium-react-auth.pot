@@ -7,17 +7,72 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: gopherium-react-auth\n"
 
-msgid "Actions"
+msgid "\"%(name)s\" disabled."
 msgstr ""
 
-msgid "Active"
+msgid "\"%(name)s\" enabled."
+msgstr ""
+
+msgid "%s user could not be disabled."
+msgid_plural "%s users could not be disabled."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%s user could not be enabled."
+msgid_plural "%s users could not be enabled."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%s user disabled."
+msgid_plural "%s users disabled."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%s user enabled."
+msgid_plural "%s users enabled."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Activation link"
+msgstr ""
+
+msgid "Add User"
+msgstr ""
+
+msgid "Add one with %(button)s."
+msgstr ""
+
+msgid "Avatar"
 msgstr ""
 
 msgid "Back to login"
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
 msgid "Caps lock is on."
 msgstr ""
+
+msgid "Change role"
+msgstr ""
+
+msgid "Change role to…"
+msgstr ""
+
+msgid "Change role…"
+msgstr ""
+
+msgid "Changed roles."
+msgstr ""
+
+msgid "Choose the role of %(name)s."
+msgstr ""
+
+msgid "Choose the role of %s user."
+msgid_plural "Choose the role of %s users."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Confirm Password"
 msgstr ""
@@ -28,13 +83,10 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
+msgid "Created"
+msgstr ""
+
 msgid "Disable"
-msgstr ""
-
-msgid "Disable %s"
-msgstr ""
-
-msgid "Disabled"
 msgstr ""
 
 msgid "Done"
@@ -43,10 +95,13 @@ msgstr ""
 msgid "Double-check your email address before continuing."
 msgstr ""
 
+msgid "Email"
+msgstr ""
+
 msgid "Enable"
 msgstr ""
 
-msgid "Enable %s"
+msgid "Generate password"
 msgstr ""
 
 msgid "Go to login"
@@ -72,7 +127,10 @@ msgstr ""
 msgid "Invalid email or password."
 msgstr ""
 
-msgid "Loading users…"
+msgid "Invalid user ID."
+msgstr ""
+
+msgid "Invitation sent to \"%(name)s\"."
 msgstr ""
 
 msgid "Loading…"
@@ -93,7 +151,19 @@ msgstr ""
 msgid "Lost your password?"
 msgstr ""
 
+msgid "Manage who can sign in and what they can do."
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
 msgid "No mail server is configured. Deliver the activation link by hand."
+msgstr ""
+
+msgid "No users found."
+msgstr ""
+
+msgid "No users yet."
 msgstr ""
 
 msgid "Password"
@@ -105,7 +175,22 @@ msgstr ""
 msgid "Please provide a name."
 msgstr ""
 
-msgid "Send invitation"
+msgid "Resend invitation"
+msgstr ""
+
+msgid "Resend invitation…"
+msgstr ""
+
+msgid "Role"
+msgstr ""
+
+msgid "Role changed for \"%(name)s\"."
+msgstr ""
+
+msgid "Search users…"
+msgstr ""
+
+msgid "Send a new invitation to \"%(name)s\" (%(email)s)? The link sent before stops working."
 msgstr ""
 
 msgid "Send reset link"
@@ -123,13 +208,31 @@ msgstr ""
 msgid "Show password"
 msgstr ""
 
+msgid "Somebody must be able to manage users."
+msgstr ""
+
 msgid "Something went wrong."
 msgstr ""
 
 msgid "Sorry, that is not a valid email address. Email addresses look like <code>username@example.com</code>."
 msgstr ""
 
+msgid "Sorry, you are not allowed to edit this user."
+msgstr ""
+
+msgid "Sorry, you are not allowed to edit users."
+msgstr ""
+
+msgid "Sorry, you are not allowed to give users that role."
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
 msgid "The account could not be created, please try again."
+msgstr ""
+
+msgid "The email address is not correct."
 msgstr ""
 
 msgid "The invitation could not be sent."
@@ -141,10 +244,30 @@ msgstr ""
 msgid "The request failed, please try again."
 msgstr ""
 
+msgid "The role could not be changed."
+msgstr ""
+
+msgid "The role of %s user could not be changed."
+msgid_plural "The roles of %s users could not be changed."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "The role of that account just changed. Reload the page and try again."
+msgstr ""
+
 msgid "The setup code file cannot be used. Please check it and try again."
 msgstr ""
 
 msgid "The site is starting. Please wait a moment and try again."
+msgstr ""
+
+msgid "The user could not be disabled."
+msgstr ""
+
+msgid "The user could not be enabled."
+msgstr ""
+
+msgid "This email is already registered. Please choose another one."
 msgstr ""
 
 msgid "This link is no longer valid. Ask for a new one."
@@ -174,13 +297,16 @@ msgstr ""
 msgid "Unlock %s"
 msgstr ""
 
-msgid "Update failed."
-msgstr ""
-
 msgid "Users could not be loaded."
 msgstr ""
 
 msgid "You appear to have already set up this site."
+msgstr ""
+
+msgid "You cannot change your own role."
+msgstr ""
+
+msgid "You cannot disable your own account."
 msgstr ""
 
 msgid "You will need this password to log in. Please store it in a secure location."
@@ -214,26 +340,6 @@ msgctxt "admin section"
 msgid "Users"
 msgstr ""
 
-msgctxt "button"
-msgid "New user"
-msgstr ""
-
-msgctxt "column"
-msgid "Email"
-msgstr ""
-
-msgctxt "column"
-msgid "Name"
-msgstr ""
-
-msgctxt "column"
-msgid "Status"
-msgstr ""
-
-msgctxt "field label"
-msgid "Activation link"
-msgstr ""
-
 msgctxt "field label"
 msgid "Email"
 msgstr ""
@@ -242,12 +348,8 @@ msgctxt "field label"
 msgid "Name"
 msgstr ""
 
-msgctxt "page heading"
-msgid "New user"
-msgstr ""
-
-msgctxt "page heading"
-msgid "Users"
+msgctxt "no user roles"
+msgid "None"
 msgstr ""
 
 msgctxt "password strength"
@@ -268,4 +370,20 @@ msgstr ""
 
 msgctxt "password strength"
 msgid "Weak"
+msgstr ""
+
+msgctxt "role"
+msgid "No role"
+msgstr ""
+
+msgctxt "user status"
+msgid "Active"
+msgstr ""
+
+msgctxt "user status"
+msgid "Disabled"
+msgstr ""
+
+msgctxt "user status"
+msgid "Invited"
 msgstr ""

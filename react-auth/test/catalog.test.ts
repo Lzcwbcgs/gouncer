@@ -26,6 +26,62 @@ const oursFuzzy = [
 	'The account could not be created, please try again.',
 ]
 
+const oursFuzzyInTheList: [context: string, msgid: string][] = [
+	['', '"%(name)s" disabled.'],
+	['', '"%(name)s" enabled.'],
+	['', '%s user could not be disabled.'],
+	['', '%s user could not be enabled.'],
+	['', '%s user disabled.'],
+	['', '%s user enabled.'],
+	['', 'Add one with %(button)s.'],
+	['', 'Change role'],
+	['', 'Change role to…'],
+	['', 'Change role…'],
+	['', 'Changed roles.'],
+	['', 'Choose the role of %(name)s.'],
+	['', 'Choose the role of %s user.'],
+	['', 'Created'],
+	['', 'Invitation sent to "%(name)s".'],
+	['', 'Manage who can sign in and what they can do.'],
+	['', 'No users yet.'],
+	['', 'Resend invitation'],
+	['', 'Resend invitation…'],
+	['', 'Role'],
+	['', 'Role changed for "%(name)s".'],
+	['', 'Search users…'],
+	['', 'Send a new invitation to "%(name)s" (%(email)s)? The link sent before stops working.'],
+	['', 'Somebody must be able to manage users.'],
+	['', 'Sorry, you are not allowed to give users that role.'],
+	['', 'The role could not be changed.'],
+	['', 'The role of %s user could not be changed.'],
+	['', 'The role of that account just changed. Reload the page and try again.'],
+	['', 'The user could not be disabled.'],
+	['', 'The user could not be enabled.'],
+	['', 'You cannot change your own role.'],
+	['', 'You cannot disable your own account.'],
+	['role', 'No role'],
+	['user status', 'Invited'],
+]
+
+const wordpressReviewedInTheList: [context: string, msgid: string][] = [
+	['', 'Add User'],
+	['', 'Avatar'],
+	['', 'Cancel'],
+	['', 'Email'],
+	['', 'Generate password'],
+	['', 'Invalid user ID.'],
+	['', 'Name'],
+	['', 'No users found.'],
+	['', 'Sorry, you are not allowed to edit this user.'],
+	['', 'Sorry, you are not allowed to edit users.'],
+	['', 'Status'],
+	['', 'The email address is not correct.'],
+	['', 'This email is already registered. Please choose another one.'],
+	['no user roles', 'None'],
+	['user status', 'Active'],
+	['user status', 'Disabled'],
+]
+
 const wordpressReviewed: [context: string, msgid: string][] = [
 	['', 'Continue'],
 	['', 'Your Email'],
@@ -94,6 +150,30 @@ test("ships WordPress's own words reviewed and ours fuzzy", () => {
 	for (const msgid of oursFuzzy) {
 		expect(flagsOf(msgid), msgid).toContain('fuzzy')
 	}
+})
+
+test("ships the list's WordPress words reviewed and its own words fuzzy in Spanish", () => {
+	for (const [context, msgid] of wordpressReviewedInTheList) {
+		expect(flagsOf(msgid, context), msgid).toBeDefined()
+		expect(flagsOf(msgid, context), msgid).not.toContain('fuzzy')
+	}
+	for (const [context, msgid] of oursFuzzyInTheList) {
+		expect(flagsOf(msgid, context), msgid).toContain('fuzzy')
+	}
+})
+
+test('keeps Rol in Spanish where WordPress says Perfil', async () => {
+	const held = await catalogFor('es-ES')
+
+	expect(held?.['Role']).toEqual(['Rol'])
+	expect(held?.['Change role to…']).toEqual(['Cambiar el rol a…'])
+	expect(held?.['Changed roles.']).toEqual(['Roles cambiados.'])
+})
+
+test('reads the users list failure the way both admins already say it in Spanish', async () => {
+	const held = await catalogFor('es-ES')
+
+	expect(held?.['Users could not be loaded.']).toEqual(['No se han podido cargar los usuarios.'])
 })
 
 test('answers nothing for the language the sources are written in', async () => {
