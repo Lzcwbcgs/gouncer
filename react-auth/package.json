@@ -25,6 +25,10 @@
       "types": "./dist/wpds/index.d.ts",
       "default": "./dist/wpds/index.js"
     },
+    "./wpds/users": {
+      "types": "./dist/wpds/users/index.d.ts",
+      "default": "./dist/wpds/users/index.js"
+    },
     "./wpds/style.css": "./dist/wpds/style.css",
     "./languages/*": "./dist/languages/*",
     "./testing": {
