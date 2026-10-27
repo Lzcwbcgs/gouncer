@@ -87,6 +87,26 @@ const roleChangeErrors: ErrorClasses = new Map<string, new (message: string) => 
 	['self_role_refused', SelfRoleError],
 ])
 
+type StatusErrors = ReadonlyMap<number, () => Error>
+
+const creationStatusErrors: StatusErrors = new Map([[409, () => new EmailTakenError('email already in use')]])
+
+const invitationStatusErrors: StatusErrors = new Map([[429, () => new RateLimitedError('too many attempts')]])
+
+interface AccountPost {
+	path: string
+	body: object
+	write: string
+	fallback: string
+	errorsByStatus: StatusErrors
+}
+
+type InvitationRoute = Pick<AccountPost, 'path' | 'write'>
+
+const inviteRoute: InvitationRoute = { path: '/api/users/invite', write: 'inviting' }
+
+const resendRoute: InvitationRoute = { path: '/api/users/invite/resend', write: 'resending invitation' }
+
 /**
  * Returns the typed error a refused response's code names.
  * @param refused - The code and message the response carries.
@@ -101,12 +121,11 @@ function typedError(refused: Refused, errors: ErrorClasses = roleErrors): Error 
 /**
  * Returns the error a refused account write throws.
  * @param response - The refused HTTP response.
- * @param fallback - The message to use when the body is unreadable.
- * @param write - Names the write in the error for any other status.
+ * @param post - The write, with the message for an unreadable body and its name for any other status.
  * @returns The error to throw.
  */
-async function writeError(response: Response, fallback: string, write: string): Promise<Error> {
-	const refused = await refusalOf(response, fallback)
+async function writeError(response: Response, post: AccountPost): Promise<Error> {
+	const refused = await refusalOf(response, post.fallback)
 	const typed = typedError(refused)
 	if (typed) {
 		return typed
@@ -114,7 +133,31 @@ async function writeError(response: Response, fallback: string, write: string): 
 	if (response.status === 422) {
 		return new ValidationError(refused.message, refused)
 	}
-	return new Error(`${write} failed with status ${response.status}`)
+	return new Error(`${post.write} failed with status ${response.status}`)
+}
+
+/**
+ * Posts an account write over REST and returns the body it answers.
+ * @param post - The route, the fields it reads and the error each known status throws.
+ * @returns The answered body, still to be parsed.
+ */
+async function postAccountWrite(post: AccountPost): Promise<unknown> {
+	const response = await fetch(post.path, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(post.body),
+	})
+	if (response.status === 401) {
+		throw new UnauthorizedError('session expired')
+	}
+	const known = post.errorsByStatus.get(response.status)
+	if (known) {
+		throw known()
+	}
+	if (!response.ok) {
+		throw await writeError(response, post)
+	}
+	return response.json()
 }
 
 /**
@@ -139,21 +182,30 @@ async function restFetchUsers(signal?: AbortSignal): Promise<User[]> {
  * @returns The created user.
  */
 async function restCreateUser(input: NewUser): Promise<User> {
-	const response = await fetch('/api/users', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(input),
+	const created = await postAccountWrite({
+		path: '/api/users',
+		body: input,
+		write: 'creating user',
+		fallback: __('invalid user details', DOMAIN),
+		errorsByStatus: creationStatusErrors,
 	})
-	if (response.status === 401) {
-		throw new UnauthorizedError('session expired')
-	}
-	if (response.status === 409) {
-		throw new EmailTakenError('email already in use')
-	}
-	if (!response.ok) {
-		throw await writeError(response, __('invalid user details', DOMAIN), 'creating user')
-	}
-	return accountSchema.parse(await response.json())
+	return accountSchema.parse(created)
+}
+
+/**
+ * Posts an invitation write over REST and answers its delivery report.
+ * @param route - The invitation route and the name its errors give the write.
+ * @param body - The fields the route reads.
+ * @returns The delivery report, carrying the link when nothing mailed it.
+ */
+async function postInvitation(route: InvitationRoute, body: object): Promise<Invitation> {
+	const report = await postAccountWrite({
+		...route,
+		body,
+		fallback: __('invalid invitation details', DOMAIN),
+		errorsByStatus: invitationStatusErrors,
+	})
+	return invitationSchema.parse(report)
 }
 
 /**
@@ -163,21 +215,16 @@ async function restCreateUser(input: NewUser): Promise<User> {
  * @returns The delivery report, carrying the link when nothing mailed it.
  */
 async function restInvite(input: NewInvite): Promise<Invitation> {
-	const response = await fetch('/api/users/invite', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(input),
-	})
-	if (response.status === 401) {
-		throw new UnauthorizedError('session expired')
-	}
-	if (response.status === 429) {
-		throw new RateLimitedError('too many attempts')
-	}
-	if (!response.ok) {
-		throw await writeError(response, __('invalid invitation details', DOMAIN), 'inviting')
-	}
-	return invitationSchema.parse(await response.json())
+	return postInvitation(inviteRoute, input)
+}
+
+/**
+ * Sends a new invitation to a pending account over REST, ending the link sent before.
+ * @param email - The address of the invited account.
+ * @returns The delivery report, carrying the link when nothing mailed it.
+ */
+async function restResendInvite(email: string): Promise<Invitation> {
+	return postInvitation(resendRoute, { email })
 }
 
 /**
@@ -265,4 +312,14 @@ export async function setUserRole(id: string, role: string): Promise<void> {
  */
 export async function invite(input: NewInvite): Promise<Invitation> {
 	return invitationSchema.parse(await resolveTransport('invite', restInvite)(input))
+}
+
+/**
+ * Sends a new invitation to a pending account, ending the link sent before,
+ * and holds every transport to the invitation contract.
+ * @param email - The address of the invited account.
+ * @returns The delivery report, carrying the link when nothing mailed it.
+ */
+export async function resendInvite(email: string): Promise<Invitation> {
+	return invitationSchema.parse(await resolveTransport('resendInvite', restResendInvite)(email))
 }

@@ -20,6 +20,7 @@ export interface AuthTransport {
 	setUserDisabled(id: string, disabled: boolean): Promise<void>
 	setUserRole(id: string, role: string): Promise<void>
 	invite(input: NewInvite): Promise<Invitation>
+	resendInvite(email: string): Promise<Invitation>
 	acceptInvite(token: string, password: string): Promise<User>
 	requestPasswordReset(email: string): Promise<void>
 	resetPassword(token: string, password: string): Promise<void>
