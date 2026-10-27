@@ -82,6 +82,57 @@ const wordpressReviewedInTheList: [context: string, msgid: string][] = [
 	['user status', 'Disabled'],
 ]
 
+const frenchWordpressReviewed: [context: string, msgid: string][] = [
+	['', 'Add User'],
+	['', 'Avatar'],
+	['', 'Cancel'],
+	['', 'Caps lock is on.'],
+	['', 'Change role to…'],
+	['', 'Changed roles.'],
+	['', 'Confirm Password'],
+	['', 'Confirm use of weak password'],
+	['', 'Continue'],
+	['', 'Created'],
+	['', 'Disable'],
+	['', 'Done'],
+	['', 'Double-check your email address before continuing.'],
+	['', 'Email'],
+	['', 'Enable'],
+	['', 'Generate password'],
+	['', 'Hide'],
+	['', 'Hide password'],
+	['', 'Important:'],
+	['', 'Invalid user ID.'],
+	['', 'Loading…'],
+	['', 'Lost your password?'],
+	['', 'Name'],
+	['', 'No users found.'],
+	['', 'Password'],
+	['', 'Role'],
+	['', 'Show'],
+	['', 'Show password'],
+	['', 'Sorry, that is not a valid email address. Email addresses look like <code>username@example.com</code>.'],
+	['', 'Sorry, you are not allowed to edit this user.'],
+	['', 'Sorry, you are not allowed to edit users.'],
+	['', 'Sorry, you are not allowed to give users that role.'],
+	['', 'Status'],
+	['', 'Try again'],
+	['', 'You will need this password to log\xa0in. Please store it in a secure location.'],
+	['', 'Your Email'],
+	['admin section', 'Users'],
+	['field label', 'Email'],
+	['field label', 'Name'],
+	['no user roles', 'None'],
+	['password strength', 'Medium'],
+	['password strength', 'Password strength unknown'],
+	['password strength', 'Strong'],
+	['password strength', 'Very weak'],
+	['password strength', 'Weak'],
+	['role', 'No role'],
+	['user status', 'Active'],
+	['user status', 'Disabled'],
+]
+
 const wordpressReviewed: [context: string, msgid: string][] = [
 	['', 'Continue'],
 	['', 'Your Email'],
@@ -102,9 +153,18 @@ const wordpressReviewed: [context: string, msgid: string][] = [
 	['', 'Confirm use of weak password'],
 ]
 
-function flagsOf(msgid: string, context = ''): string[] | undefined {
-	const entry = po.parse(readFileSync('languages/es-ES.po', 'utf8')).translations[context]?.[msgid]
+function flagsOf(msgid: string, context = '', locale = 'es-ES'): string[] | undefined {
+	const entry = po.parse(readFileSync(`languages/${locale}.po`, 'utf8')).translations[context]?.[msgid]
 	return entry && (entry.comments?.flag ?? '').split(',').map((flag) => flag.trim())
+}
+
+function frenchEntries(): [context: string, msgid: string, fuzzy: boolean][] {
+	const translations = po.parse(readFileSync('languages/fr-FR.po', 'utf8')).translations
+	return Object.entries(translations).flatMap(([context, held]) =>
+		Object.values(held)
+			.filter((entry) => entry.msgid !== '')
+			.map((entry): [string, string, boolean] => [context, entry.msgid, entry.comments?.flag === 'fuzzy']),
+	)
 }
 
 test('answers the catalogue a locale ships with', async () => {
@@ -162,12 +222,38 @@ test("ships the list's WordPress words reviewed and its own words fuzzy in Spani
 	}
 })
 
+test("ships WordPress's French reviewed and every other French word fuzzy", () => {
+	const reviewed = new Set(frenchWordpressReviewed.map(([context, msgid]) => `${context}\u0004${msgid}`))
+	const entries = frenchEntries()
+
+	const misflagged = entries
+		.filter(([context, msgid, fuzzy]) => fuzzy === reviewed.has(`${context}\u0004${msgid}`))
+		.map(([context, msgid]) => `${context}\u0004${msgid}`)
+
+	expect(entries.length).toBeGreaterThan(frenchWordpressReviewed.length)
+	expect(misflagged).toEqual([])
+})
+
+test('answers the French catalogue with the language it is for', async () => {
+	const held = await catalogFor('fr-FR')
+
+	expect(held?.['']).toMatchObject({ lang: 'fr-FR' })
+})
+
 test('keeps Rol in Spanish where WordPress says Perfil', async () => {
 	const held = await catalogFor('es-ES')
 
 	expect(held?.['Role']).toEqual(['Rol'])
 	expect(held?.['Change role to…']).toEqual(['Cambiar el rol a…'])
 	expect(held?.['Changed roles.']).toEqual(['Roles cambiados.'])
+})
+
+test('takes Comptes in French as WordPress names users', async () => {
+	const held = await catalogFor('fr-FR')
+
+	expect(held?.['admin section\u0004Users']).toEqual(['Comptes'])
+	expect(held?.['Add User']).toEqual(['Ajouter un compte'])
+	expect(held?.['No users found.']).toEqual(['Aucun compte trouvé.'])
 })
 
 test('reads the users list failure the way both admins already say it in Spanish', async () => {
