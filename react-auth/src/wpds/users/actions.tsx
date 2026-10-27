@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { focusedTrigger } from '@gopherium/godmin'
-import type { BulkRun, Trigger } from '@gopherium/godmin'
+import type { BulkRun, Trigger, UnsavedText } from '@gopherium/godmin'
 import type { Action } from '@wordpress/dataviews'
 import { __ } from '@wordpress/i18n'
 import { check, notAllowed, pencil } from '@wordpress/icons'
@@ -21,6 +21,8 @@ export interface ActionTools {
 	reader: User | null
 	/** Runs an Enable or a Disable over the picked accounts, reads the list again and shows one toast. */
 	switches: BulkRun<Account>
+	/** The activation links resends answered, by account id, kept until a dialog showing one closes. */
+	links: UnsavedText
 	/** The words the app gives the error codes only it answers. */
 	errorMessages: ErrorMessages
 	/** Opens Change role on the accounts, given the trigger it opened from. */
@@ -53,7 +55,7 @@ export function mayChangeRole(reader: User | null, account: Account): boolean {
  * @returns Change role, Resend invitation, Enable and Disable, in the order the bulk bar draws them, none signed out.
  */
 export function useUsersActions(tools: ActionTools): Action<Account>[] {
-	const { reader, switches, errorMessages, openRole } = tools
+	const { reader, switches, links, errorMessages, openRole } = tools
 	return useMemo(() => {
 		if (reader === null) {
 			return []
@@ -76,7 +78,7 @@ export function useUsersActions(tools: ActionTools): Action<Account>[] {
 				modalHeader: __('Resend invitation', DOMAIN),
 				modalFocusOnMount: 'firstContentElement',
 				isEligible: (account) => mayEdit(reader, account) && !account.confirmed && !account.disabled,
-				RenderModal: (props) => <ResendModal {...props} errorMessages={errorMessages} />,
+				RenderModal: (props) => <ResendModal {...props} links={links} errorMessages={errorMessages} />,
 			},
 			{
 				id: 'enable',
@@ -97,5 +99,5 @@ export function useUsersActions(tools: ActionTools): Action<Account>[] {
 			},
 		]
 		return actions
-	}, [reader, switches, errorMessages, openRole])
+	}, [reader, switches, links, errorMessages, openRole])
 }

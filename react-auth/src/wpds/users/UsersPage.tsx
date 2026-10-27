@@ -165,12 +165,13 @@ export function UsersPage(props: UsersPageProps) {
 	const reload = useCallback(() => client.invalidateQueries({ queryKey: usersQueryKey }), [client])
 	const switches = useBulkRun<Account>(run, reload)
 	const unsaved = useUnsavedText()
+	const links = useUnsavedText()
 	const focusBack = useFocusBack(users.isFetching, region)
 	const [opened, setOpened] = useState<OpenedRole>()
 	const openRole = useCallback((accounts: Account[], trigger: Trigger) => setOpened({ accounts, trigger }), [])
 	const errorMessages = props.errorMessages ?? NO_MESSAGES
 	const roleLabels = props.roleLabels ?? NO_LABELS
-	const actions = useUsersActions({ reader, switches, errorMessages, openRole })
+	const actions = useUsersActions({ reader, switches, links, errorMessages, openRole })
 	const grantable = reader?.grantable ?? NO_ROLES
 	const title = _x('Users', 'admin section', DOMAIN)
 	return (

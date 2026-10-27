@@ -197,6 +197,72 @@ test('closes only itself once its write ends, never a resend opened on the row s
 	expect(screen.getByRole('dialog', { name: 'Resend invitation' })).toBeInTheDocument()
 })
 
+test('shows the activation link when the resend opens again after it closed before the server answered', async () => {
+	const answer = held()
+	server.use(
+		http.post('/api/users/invite/resend', async () => {
+			await answer.gate
+			return HttpResponse.json({ delivered: false, activation_link: '/activate?token=t-9' })
+		}),
+	)
+	const { client } = renderUsers()
+	const modal = await openResend()
+	await userEvent.click(modal.getByRole('button', { name: 'Resend invitation' }))
+	await userEvent.click(modal.getByRole('button', { name: 'Close' }))
+	await closed()
+
+	answer.release()
+	await waitFor(() => expect(client.isMutating()).toBe(0))
+
+	const again = await openResend()
+	expect(again.getByLabelText('Activation link')).toHaveValue('/activate?token=t-9')
+	await userEvent.click(again.getByRole('button', { name: 'Done' }))
+	await closed()
+	expect((await openResend()).getByRole('button', { name: 'Resend invitation' })).toBeInTheDocument()
+})
+
+test('opens on the question again once a resend that showed its activation link closed', async () => {
+	server.use(resendUndelivered('/activate?token=t-9'))
+	renderUsers()
+	const modal = await openResend()
+	await userEvent.click(modal.getByRole('button', { name: 'Resend invitation' }))
+	await modal.findByLabelText('Activation link')
+
+	await userEvent.click(modal.getByRole('button', { name: 'Close' }))
+	await closed()
+
+	expect((await openResend()).getByRole('button', { name: 'Resend invitation' })).toBeInTheDocument()
+})
+
+test('never keeps the activation link of a resend a later one replaced', async () => {
+	const first = held()
+	const answers = ['/activate?token=t-1', '/activate?token=t-2']
+	server.use(
+		http.post('/api/users/invite/resend', async () => {
+			const link = answers.shift()
+			if (link === '/activate?token=t-1') {
+				await first.gate
+			}
+			return HttpResponse.json({ delivered: false, activation_link: link })
+		}),
+	)
+	const { client } = renderUsers()
+	const modal = await openResend()
+	await userEvent.click(modal.getByRole('button', { name: 'Resend invitation' }))
+	await userEvent.click(modal.getByRole('button', { name: 'Close' }))
+	await closed()
+	const second = await openResend()
+	await userEvent.click(second.getByRole('button', { name: 'Resend invitation' }))
+	expect(await second.findByLabelText('Activation link')).toHaveValue('/activate?token=t-2')
+	await userEvent.click(second.getByRole('button', { name: 'Done' }))
+	await closed()
+
+	first.release()
+	await waitFor(() => expect(client.isMutating()).toBe(0))
+
+	expect((await openResend()).getByRole('button', { name: 'Resend invitation' })).toBeInTheDocument()
+})
+
 test('signs the reader out when the session ended before the resend', async () => {
 	server.use(http.post('/api/users/invite/resend', () => HttpResponse.json({ error: 'no session' }, { status: 401 })))
 	const { client } = renderUsers()
