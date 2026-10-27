@@ -58,6 +58,8 @@ export {
 	UserNotEditableError,
 	UserNotFoundError,
 } from './errors.js'
+export { fieldError } from './fieldError.js'
+export type { FieldError, UserField } from './fieldError.js'
 
 type Refused = Awaited<ReturnType<typeof refusalOf>>
 

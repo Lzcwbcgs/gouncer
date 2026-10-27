@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useMutation } from '@tanstack/react-query'
-import { __, _n, _x, sprintf } from '@wordpress/i18n'
-import type { TransformedText } from '@wordpress/i18n'
+import { __, _x } from '@wordpress/i18n'
 import { Button, CheckboxControl, Field, Input, Text } from '@wordpress/ui'
 import { useEffect, useEffectEvent, useId, useRef, useState } from 'react'
 import type { ComponentProps, KeyboardEvent, ReactNode } from 'react'
 
 import type { Account } from '../account.js'
+import { passwordHint } from '../admin/fieldError.js'
 import { ValidationError } from '../api.js'
 import { DOMAIN } from '../domain.js'
 import { SetupClosedError, SetupCodeError, SiteStartingError, createFirstAccount, isSetupOpen } from '../setup.js'
@@ -59,23 +59,6 @@ interface RefusalHooks {
  */
 function withCode(sentence: string): ReactNode {
 	return sentence.split(/<\/?code>/).map((part, index) => (index % 2 === 1 ? <code key={index}>{part}</code> : part))
-}
-
-/**
- * Returns the password hint with the server's floor as its number.
- * @param min - The fewest characters the server accepts.
- * @returns The hint.
- */
-function passwordHint(min: number): string {
-	const hint = _n(
-		'Hint: The password should be at least %d character long. ' +
-			'To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ %% ^ & ).',
-		'Hint: The password should be at least %d characters long. ' +
-			'To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ %% ^ & ).',
-		min,
-		DOMAIN,
-	) as TransformedText<'%d'>
-	return sprintf(hint, min)
 }
 
 const validationWords = new Map<string, (meta: Record<string, unknown>) => ReactNode>([
