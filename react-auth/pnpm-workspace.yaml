@@ -9,6 +9,7 @@ peerDependencyRules:
     '@types/react': '19'
 
 minimumReleaseAgeExclude:
+  - '@gopherium/*'
   - vite@8.1.5
   - tldts@7.4.9
   - tldts-core@7.4.9
