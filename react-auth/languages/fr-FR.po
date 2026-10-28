@@ -1,0 +1,467 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: gopherium-react-auth\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"X-Domain: gopherium-react-auth\n"
+"Language: fr-FR\n"
+
+#, fuzzy
+msgid "\"%(name)s\" disabled."
+msgstr "Compte « %(name)s » désactivé."
+
+#, fuzzy
+msgid "\"%(name)s\" enabled."
+msgstr "Compte « %(name)s » activé."
+
+#, fuzzy
+msgid "%s user could not be disabled."
+msgid_plural "%s users could not be disabled."
+msgstr[0] "%s compte n’a pas pu être désactivé."
+msgstr[1] "%s de comptes n’ont pas pu être désactivés."
+msgstr[2] "%s comptes n’ont pas pu être désactivés."
+
+#, fuzzy
+msgid "%s user could not be enabled."
+msgid_plural "%s users could not be enabled."
+msgstr[0] "%s compte n’a pas pu être activé."
+msgstr[1] "%s de comptes n’ont pas pu être activés."
+msgstr[2] "%s comptes n’ont pas pu être activés."
+
+#, fuzzy
+msgid "%s user disabled."
+msgid_plural "%s users disabled."
+msgstr[0] "%s compte désactivé."
+msgstr[1] "%s de comptes désactivés."
+msgstr[2] "%s comptes désactivés."
+
+#, fuzzy
+msgid "%s user enabled."
+msgid_plural "%s users enabled."
+msgstr[0] "%s compte activé."
+msgstr[1] "%s de comptes activés."
+msgstr[2] "%s comptes activés."
+
+#, fuzzy
+msgid "Activation link"
+msgstr "Lien d’activation"
+
+msgid "Add User"
+msgstr "Ajouter un compte"
+
+#, fuzzy
+msgid "Add one with %(button)s."
+msgstr "Ajoutez-en un avec %(button)s."
+
+msgid "Avatar"
+msgstr "Avatar"
+
+#, fuzzy
+msgid "Back to login"
+msgstr "Retour à la connexion"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Caps lock is on."
+msgstr "Le verrouillage majuscule est activé."
+
+#, fuzzy
+msgid "Change role"
+msgstr "Changer le rôle"
+
+msgid "Change role to…"
+msgstr "Changer de rôle pour…"
+
+#, fuzzy
+msgid "Change role…"
+msgstr "Changer le rôle…"
+
+msgid "Changed roles."
+msgstr "Rôles modifiés."
+
+#, fuzzy
+msgid "Choose the role of %(name)s."
+msgstr "Choisissez le rôle de %(name)s."
+
+#, fuzzy
+msgid "Choose the role of %s user."
+msgid_plural "Choose the role of %s users."
+msgstr[0] "Choisissez le rôle de %s compte."
+msgstr[1] "Choisissez le rôle de %s de comptes."
+msgstr[2] "Choisissez le rôle de %s comptes."
+
+msgid "Confirm Password"
+msgstr "Confirmer le mot de passe"
+
+msgid "Confirm use of weak password"
+msgstr "Confirmer l’utilisation du mot de passe faible"
+
+msgid "Continue"
+msgstr "Continuer"
+
+msgid "Created"
+msgstr "Créé"
+
+msgid "Disable"
+msgstr "Désactiver"
+
+msgid "Done"
+msgstr "Terminé"
+
+msgid "Double-check your email address before continuing."
+msgstr "Vérifiez bien cette adresse e-mail avant de continuer."
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Enable"
+msgstr "Activer"
+
+msgid "Generate password"
+msgstr "Générer un mot de passe"
+
+#, fuzzy
+msgid "Go to login"
+msgstr "Aller à la connexion"
+
+msgid "Hide"
+msgstr "Masquer"
+
+msgid "Hide password"
+msgstr "Masquer le mot de passe"
+
+#, fuzzy
+msgid "Hint: The password should be at least %d character long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ %% ^ & )."
+msgid_plural "Hint: The password should be at least %d characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ %% ^ & )."
+msgstr[0] "Conseil : Le mot de passe devrait contenir au moins %d caractère. Pour le rendre plus sûr, utilisez des lettres en majuscules et minuscules, des nombres, et des symboles tels que ! \" ? $ %% ^ & )."
+msgstr[1] "Conseil : Le mot de passe devrait contenir au moins %d de caractères. Pour le rendre plus sûr, utilisez des lettres en majuscules et minuscules, des nombres, et des symboles tels que ! \" ? $ %% ^ & )."
+msgstr[2] "Conseil : Le mot de passe devrait contenir au moins %d caractères. Pour le rendre plus sûr, utilisez des lettres en majuscules et minuscules, des nombres, et des symboles tels que ! \" ? $ %% ^ & )."
+
+#, fuzzy
+msgid "If that address has an account, a reset link is on its way."
+msgstr "Si cette adresse correspond à un compte, un lien de réinitialisation est en route."
+
+msgid "Important:"
+msgstr "Important :"
+
+#, fuzzy
+msgid "Invalid email or password."
+msgstr "E-mail ou mot de passe incorrect."
+
+msgid "Invalid user ID."
+msgstr "ID du compte non valide."
+
+#, fuzzy
+msgid "Invitation sent to \"%(name)s\"."
+msgstr "Invitation envoyée à « %(name)s »."
+
+msgid "Loading…"
+msgstr "Chargement…"
+
+#, fuzzy
+msgid "Log in"
+msgstr "Se connecter"
+
+#, fuzzy
+msgid "Log out"
+msgstr "Se déconnecter"
+
+#, fuzzy
+msgid "Login failed, please try again."
+msgstr "La connexion a échoué, veuillez réessayer."
+
+#, fuzzy
+msgid "Logout failed, please try again."
+msgstr "La déconnexion a échoué, veuillez réessayer."
+
+msgid "Lost your password?"
+msgstr "Mot de passe oublié ?"
+
+#, fuzzy
+msgid "Manage who can sign in and what they can do."
+msgstr "Gérez qui peut se connecter et ce que chaque compte peut faire."
+
+msgid "Name"
+msgstr "Nom"
+
+#, fuzzy
+msgid "No mail server is configured. Deliver the activation link by hand."
+msgstr "Aucun serveur de messagerie n’est configuré. Transmettez le lien d’activation vous-même."
+
+msgid "No users found."
+msgstr "Aucun compte trouvé."
+
+#, fuzzy
+msgid "No users yet."
+msgstr "Aucun compte pour l’instant."
+
+msgid "Password"
+msgstr "Mot de passe"
+
+#, fuzzy
+msgid "Please copy the setup code from the file and paste it below."
+msgstr "Veuillez copier le code de configuration depuis le fichier et le coller ci-dessous."
+
+#, fuzzy
+msgid "Please provide a name."
+msgstr "Veuillez indiquer un nom."
+
+#, fuzzy
+msgid "Resend invitation"
+msgstr "Renvoyer l’invitation"
+
+#, fuzzy
+msgid "Resend invitation…"
+msgstr "Renvoyer l’invitation…"
+
+msgid "Role"
+msgstr "Rôle"
+
+#, fuzzy
+msgid "Role changed for \"%(name)s\"."
+msgstr "Rôle modifié pour « %(name)s »."
+
+#, fuzzy
+msgid "Search users…"
+msgstr "Rechercher des comptes…"
+
+#, fuzzy
+msgid "Send a new invitation to \"%(name)s\" (%(email)s)? The link sent before stops working."
+msgstr "Envoyer une nouvelle invitation à « %(name)s » (%(email)s) ? Le lien envoyé auparavant ne fonctionnera plus."
+
+#, fuzzy
+msgid "Send reset link"
+msgstr "Envoyer le lien de réinitialisation"
+
+#, fuzzy
+msgid "Set password"
+msgstr "Enregistrer le mot de passe"
+
+#, fuzzy
+msgid "Setup code"
+msgstr "Code de configuration"
+
+msgid "Show"
+msgstr "Afficher"
+
+msgid "Show password"
+msgstr "Afficher le mot de passe"
+
+#, fuzzy
+msgid "Somebody must be able to manage users."
+msgstr "Quelqu’un doit pouvoir gérer les comptes."
+
+#, fuzzy
+msgid "Something went wrong."
+msgstr "Un problème est survenu."
+
+msgid "Sorry, that is not a valid email address. Email addresses look like <code>username@example.com</code>."
+msgstr "Désolé, ce n’est pas une adresse e-mail valide. Les adresses de messagerie ressemblent à cela : <code>identifiant@example.com</code>."
+
+msgid "Sorry, you are not allowed to edit this user."
+msgstr "Désolé, vous n’avez pas l’autorisation de modifier ce compte."
+
+msgid "Sorry, you are not allowed to edit users."
+msgstr "Désolé, vous n’avez pas l’autorisation de modifier des comptes."
+
+msgid "Sorry, you are not allowed to give users that role."
+msgstr "Désolé, vous n’avez pas l’autorisation de donner ce rôle aux comptes."
+
+msgid "Status"
+msgstr "État"
+
+#, fuzzy
+msgid "The account could not be created, please try again."
+msgstr "Le compte n’a pas pu être créé, veuillez réessayer."
+
+#, fuzzy
+msgid "The email address is not correct."
+msgstr "L’adresse e-mail est incorrecte."
+
+#, fuzzy
+msgid "The invitation could not be sent."
+msgstr "L’invitation n’a pas pu être envoyée."
+
+#, fuzzy
+msgid "The password could not be set, please try again."
+msgstr "Le mot de passe n’a pas pu être enregistré, veuillez réessayer."
+
+#, fuzzy
+msgid "The request failed, please try again."
+msgstr "La requête a échoué, veuillez réessayer."
+
+#, fuzzy
+msgid "The role could not be changed."
+msgstr "Le rôle n’a pas pu être modifié."
+
+#, fuzzy
+msgid "The role of %s user could not be changed."
+msgid_plural "The roles of %s users could not be changed."
+msgstr[0] "Le rôle de %s compte n’a pas pu être modifié."
+msgstr[1] "Les rôles de %s de comptes n’ont pas pu être modifiés."
+msgstr[2] "Les rôles de %s comptes n’ont pas pu être modifiés."
+
+#, fuzzy
+msgid "The role of that account just changed. Reload the page and try again."
+msgstr "Le rôle de ce compte vient de changer. Rechargez la page et réessayez."
+
+#, fuzzy
+msgid "The setup code file cannot be used. Please check it and try again."
+msgstr "Le fichier du code de configuration ne peut pas être utilisé. Veuillez le vérifier et réessayer."
+
+#, fuzzy
+msgid "The site is starting. Please wait a moment and try again."
+msgstr "Le site est en cours de démarrage. Veuillez patienter un instant et réessayer."
+
+#, fuzzy
+msgid "The user could not be disabled."
+msgstr "Le compte n’a pas pu être désactivé."
+
+#, fuzzy
+msgid "The user could not be enabled."
+msgstr "Le compte n’a pas pu être activé."
+
+#, fuzzy
+msgid "This email is already registered. Please choose another one."
+msgstr "Cet e-mail est déjà inscrit. Veuillez en choisir un autre."
+
+#, fuzzy
+msgid "This link is no longer valid. Ask for a new one."
+msgstr "Ce lien n’est plus valide. Demandez-en un nouveau."
+
+#, fuzzy
+msgid "This link is no longer valid. Ask the person who invited you for a new one."
+msgstr "Ce lien n’est plus valide. Demandez-en un nouveau à la personne qui vous a envoyé l’invitation."
+
+#, fuzzy
+msgid "This name is too long."
+msgstr "Ce nom est trop long."
+
+#, fuzzy
+msgid "This password is too long."
+msgstr "Ce mot de passe est trop long."
+
+#, fuzzy
+msgid "To ensure this site is securely set up by its owner, a setup code has been written to a file on the server."
+msgstr "Pour garantir que ce site est configuré en toute sécurité par la personne qui en est propriétaire, un code de configuration a été écrit dans un fichier sur le serveur."
+
+#, fuzzy
+msgid "Too many attempts. Please try again later."
+msgstr "Trop de tentatives. Veuillez réessayer plus tard."
+
+#, fuzzy
+msgid "Too many attempts. Please wait a minute and try again."
+msgstr "Trop de tentatives. Veuillez patienter une minute et réessayer."
+
+msgid "Try again"
+msgstr "Réessayer"
+
+#, fuzzy
+msgid "Unlock %s"
+msgstr "Déverrouiller %s"
+
+#, fuzzy
+msgid "Users could not be loaded."
+msgstr "Les comptes n’ont pas pu être chargés."
+
+#, fuzzy
+msgid "You appear to have already set up this site."
+msgstr "Vous semblez avoir déjà configuré ce site."
+
+#, fuzzy
+msgid "You cannot change your own role."
+msgstr "Vous ne pouvez pas modifier votre propre rôle."
+
+#, fuzzy
+msgid "You cannot disable your own account."
+msgstr "Vous ne pouvez pas désactiver votre propre compte."
+
+msgid "You will need this password to log in. Please store it in a secure location."
+msgstr "Vous aurez besoin de ce mot de passe pour vous connecter. Pensez à le stocker dans un lieu sûr."
+
+msgid "Your Email"
+msgstr "Votre e-mail"
+
+#, fuzzy
+msgid "Your password is set. Sign in with it."
+msgstr "Votre mot de passe est enregistré. Utilisez-le pour vous connecter."
+
+#, fuzzy
+msgid "Your setup code appears to be invalid. Please copy it again from the setup code file."
+msgstr "Votre code de configuration semble non valide. Veuillez le copier à nouveau depuis le fichier du code de configuration."
+
+#, fuzzy
+msgid "Your setup code has expired. A new one is waiting in the setup code file."
+msgstr "Votre code de configuration a expiré. Un nouveau code vous attend dans le fichier du code de configuration."
+
+#, fuzzy
+msgid "invalid invitation details"
+msgstr "données d’invitation non valides"
+
+#, fuzzy
+msgid "invalid password details"
+msgstr "données de mot de passe non valides"
+
+#, fuzzy
+msgid "invalid user details"
+msgstr "données de compte non valides"
+
+#, fuzzy
+msgid "the account could not be updated"
+msgstr "le compte n’a pas pu être mis à jour"
+
+msgctxt "admin section"
+msgid "Users"
+msgstr "Comptes"
+
+msgctxt "field label"
+msgid "Email"
+msgstr "E-mail"
+
+msgctxt "field label"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "no user roles"
+msgid "None"
+msgstr "Aucun"
+
+msgctxt "password strength"
+msgid "Medium"
+msgstr "Moyenne"
+
+msgctxt "password strength"
+msgid "Password strength unknown"
+msgstr "Force du mot de passe inconnue."
+
+msgctxt "password strength"
+msgid "Strong"
+msgstr "Forte"
+
+msgctxt "password strength"
+msgid "Very weak"
+msgstr "Très faible"
+
+msgctxt "password strength"
+msgid "Weak"
+msgstr "Faible"
+
+msgctxt "role"
+msgid "No role"
+msgstr "Aucun rôle"
+
+msgctxt "user status"
+msgid "Active"
+msgstr "Actif"
+
+msgctxt "user status"
+msgid "Disabled"
+msgstr "Désactivé"
+
+#, fuzzy
+msgctxt "user status"
+msgid "Invited"
+msgstr "Invité"

@@ -45,6 +45,7 @@ const createdBody = {
 	confirmed: true,
 	role: 'owner',
 	created_at: '2026-10-19T10:00:00Z',
+	editable: true,
 }
 
 const codeRefusals = [
@@ -123,8 +124,10 @@ describe('createFirstAccount', () => {
 			email: 'maria@example.com',
 			name: 'Maria Perez',
 			disabled: false,
+			confirmed: true,
 			role: 'owner',
 			created_at: new Date('2026-10-19T10:00:00Z'),
+			editable: true,
 		})
 		expect(account.created_at).toBeInstanceOf(Date)
 	})

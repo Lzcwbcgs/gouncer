@@ -1,0 +1,16 @@
+{
+  "rule_sets": [
+    {
+      "matching_content_path": "react-auth/test/**",
+      "rules": [
+        { "name": "String Heavy Function Arguments", "weight": 0.0 }
+      ]
+    },
+    {
+      "matching_content_path": "react-auth/src/testing/**",
+      "rules": [
+        { "name": "String Heavy Function Arguments", "weight": 0.0 }
+      ]
+    }
+  ]
+}

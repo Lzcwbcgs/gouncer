@@ -10,6 +10,46 @@ Releases are tagged `react-auth@X.Y.Z` and publish to npm from CI. The
 npm-style tag stays invisible to the Go toolchain, unlike a
 `react-auth/vX.Y.Z` tag naming the directory's stub module.
 
+## [Unreleased]
+
+### Added
+
+- `PasswordField` and `usePasswordField` in `/wpds`, the setup step's password row for any form that sets a password: the meter, the show or hide button, the Caps Lock line, the weak password row and an optional `help` line.
+- `generateFirst` draws WordPress's "Generate password" button before the field, as its Add User screen does, each press putting in a new password as long as `usePasswordField`'s `length`.
+- `labelPosition` on `PasswordField`, DataForm's name: `side`, the default, keeps the installer's rows, and `top` stacks each label above its field as a godmin form does, for an Add User form.
+- `avatar` on an account, the address of its picture when the server sends one.
+- `resendInvite(email)` in `/admin`, sending a pending account a new invitation that ends the link sent before. Its REST default posts to `POST /api/users/invite/resend`, which no released server serves yet.
+- `UserNotEditableError` and `RoleNotGrantableError` for the codes `user_not_editable` and `role_not_grantable`, thrown by `createUser`, `invite`, `resendInvite`, `setUserRole` and `setUserDisabled`.
+- `SelfDisableError` and `UserNotFoundError`. `setUserDisabled` throws them, `LastPrivilegedError`, `RoleRefusedError` and the role errors for their codes, where it threw a plain error before.
+- `setUserRole` throws `UserNotFoundError` for an account that is gone.
+- `code` on every typed error of `/admin`, the code the server answers it with, set by the class so a transport that throws it passes nothing.
+- A `ValidationError` from `createUser` or `invite` carries the server's `code` and `meta`.
+- `fieldError(error)` in `/admin`, naming the field of an Add User form (`email`, `name` or `password`) an error from `createUser` is about, with the message to show under it.
+- `accountWithRole`, `usersOk`, `usersFailure`, `disabledOk`, `disabledRefused`, `roleRefused`, `resendDelivered`, `resendUndelivered` and `resendRefused` in `testing`.
+- `@gopherium/react-auth/wpds/users`, the Users page on WordPress DataViews, its own entry so an app that only signs people in never resolves its peers.
+- `UsersPage` lists the accounts with search, Role and Status filters, sort by Name, Email or Created, paging and the avatar, all in the view the app holds.
+- `UsersPage` offers Change role…, Resend invitation…, Enable and Disable from the row menu, and all but Resend from the bulk bar, never on the reader's own row nor on one the server marks not `editable`.
+- Change role opens on one account or several, and a click on the name or a phone tap opens it on an account the reader may change.
+- Every run ends in one toast naming the one account whole, as WordPress does, with WordPress's words for each error code authkit answers.
+- `UsersPage` takes `roleLabels`, `errorMessages`, `columns`, `showAvatars`, `addLink`, `tabs`, `headingLevel`, `pageSizes` and `sizesFailed`, all data.
+- `usersListDefaults`, the view the page opens on, as data for godmin's `useListView`.
+- `RoleSelect`, the role menu with the fewest capabilities first, and `roleLabelOf`.
+- `errorMessageOf(error, errorMessages, fallback)`, the words the list toasts a failed account write in, for an app's own Add User form.
+- `@gopherium/godmin` 0.28 only, `@gopherium/gottext` from 0.6, `@wordpress/dataviews` 20, `@wordpress/components` 42 and `@wordpress/date` 5 join the optional peers, for `/wpds/users` only.
+- An `fr-FR` catalogue covering all 118 messages, which `catalogFor('fr-FR')` answers.
+
+### Changed
+
+- **Breaking.** An account requires `confirmed` and `editable`, as authkit v0.24.0 sends them. A server or transport sending neither fails to read.
+- **Breaking.** `RoleBeyondReachError` is gone with the code `role_beyond_reach`, split as authkit v0.24.0 splits it into `UserNotEditableError` and `RoleNotGrantableError`.
+- **Breaking.** `AuthTransport` requires `resendInvite`. A partial transport given to `configureAuthTransport` keeps working.
+- The `es-ES` catalogue covers the Users page, Change role and the Add User field messages.
+
+### Removed
+
+- **Breaking.** `UsersScreen` leaves `/wpds` with its `.gopherium-users` stylesheet rules. `UsersPage` in `/wpds/users` takes its place.
+- **Breaking.** `NewUserScreen` leaves `/wpds`, since each app keeps its own Add User page with `RoleSelect` and `PasswordField`.
+
 ## [0.15.0] - 2026-10-23
 
 ### Changed

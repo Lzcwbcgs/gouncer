@@ -11,8 +11,10 @@ export const createdAccount: Account = {
 	email: 'maria@example.com',
 	name: 'Maria Perez',
 	disabled: false,
+	confirmed: true,
 	role: 'owner',
 	created_at: new Date('2026-10-19T10:00:00Z'),
+	editable: true,
 }
 
 /** The answer the site gives for each reason it refuses a setup code. */

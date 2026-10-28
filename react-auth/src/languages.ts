@@ -6,6 +6,7 @@ export type Catalog = Record<string, string[] | Record<string, string>>
 /** The catalogue this package ships for each language it has one for. */
 const SHIPPED: Record<string, () => Promise<{ default: Catalog }>> = {
 	'es-ES': () => import('./languages/es-ES.json', { with: { type: 'json' } }),
+	'fr-FR': () => import('./languages/fr-FR.json', { with: { type: 'json' } }),
 }
 
 /**

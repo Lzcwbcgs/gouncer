@@ -18,8 +18,10 @@ const maria = {
 	email: 'maria@example.com',
 	name: 'Maria Perez',
 	disabled: false,
+	confirmed: true,
 	role: 'editor',
 	created_at: '2026-07-06T10:00:00Z',
+	editable: true,
 }
 
 describe('the role on a session', () => {

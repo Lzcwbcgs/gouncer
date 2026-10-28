@@ -8,8 +8,11 @@ export const accountSchema = z.object({
 	email: z.string(),
 	name: z.string(),
 	disabled: z.boolean(),
+	confirmed: z.boolean(),
 	role: z.string().default(''),
 	created_at: z.coerce.date(),
+	editable: z.boolean(),
+	avatar: z.string().optional(),
 })
 
 /** Account is a user account as the server answers it. */

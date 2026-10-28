@@ -7,6 +7,7 @@ import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll } from 'vitest'
 
+import type { Account } from '../account.js'
 import type { User } from '../api.js'
 import { sessionQueryKey } from '../session.js'
 
@@ -25,6 +26,16 @@ export {
 	setupCodeStarting,
 	setupStatus,
 } from './setup.js'
+export {
+	disabledOk,
+	disabledRefused,
+	resendDelivered,
+	resendRefused,
+	resendUndelivered,
+	roleRefused,
+	usersFailure,
+	usersOk,
+} from './users.js'
 
 export const server = setupServer()
 
@@ -79,6 +90,27 @@ export function userWithRole(role: string): User {
  */
 export function userWithCapabilities(role: string, capabilities: string[], grantable: string[] = []): User {
 	return { ...userWithRole(role), capabilities: [...capabilities], grantable: [...grantable] }
+}
+
+/**
+ * Returns a canned listed account holding the role, under the identity userWithRole gives it.
+ * @param role - The role the account holds.
+ * @param changes - The fields a test sets apart from the canned ones.
+ * @returns The account.
+ */
+export function accountWithRole(role: string, changes: Partial<Account> = {}): Account {
+	const { id, email, name } = userWithRole(role)
+	return {
+		id,
+		email,
+		name,
+		role,
+		disabled: false,
+		confirmed: true,
+		editable: true,
+		created_at: new Date('2026-10-19T10:00:00Z'),
+		...changes,
+	}
 }
 
 /**

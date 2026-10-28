@@ -8,17 +8,90 @@ msgstr ""
 "X-Domain: gopherium-react-auth\n"
 "Language: es-ES\n"
 
-msgid "Actions"
-msgstr "Acciones"
+#, fuzzy
+msgid "\"%(name)s\" disabled."
+msgstr "«%(name)s» se ha desactivado."
 
-msgid "Active"
-msgstr "Activo"
+#, fuzzy
+msgid "\"%(name)s\" enabled."
+msgstr "«%(name)s» se ha activado."
+
+#, fuzzy
+msgid "%s user could not be disabled."
+msgid_plural "%s users could not be disabled."
+msgstr[0] "No se ha podido desactivar %s usuario."
+msgstr[1] "No se han podido desactivar %s de usuarios."
+msgstr[2] "No se han podido desactivar %s usuarios."
+
+#, fuzzy
+msgid "%s user could not be enabled."
+msgid_plural "%s users could not be enabled."
+msgstr[0] "No se ha podido activar %s usuario."
+msgstr[1] "No se han podido activar %s de usuarios."
+msgstr[2] "No se han podido activar %s usuarios."
+
+#, fuzzy
+msgid "%s user disabled."
+msgid_plural "%s users disabled."
+msgstr[0] "%s usuario desactivado."
+msgstr[1] "%s de usuarios desactivados."
+msgstr[2] "%s usuarios desactivados."
+
+#, fuzzy
+msgid "%s user enabled."
+msgid_plural "%s users enabled."
+msgstr[0] "%s usuario activado."
+msgstr[1] "%s de usuarios activados."
+msgstr[2] "%s usuarios activados."
+
+msgid "Activation link"
+msgstr "Enlace de activación"
+
+msgid "Add User"
+msgstr "Añadir usuario"
+
+#, fuzzy
+msgid "Add one with %(button)s."
+msgstr "Añade uno con %(button)s."
+
+msgid "Avatar"
+msgstr "Avatar"
 
 msgid "Back to login"
 msgstr "Volver al inicio de sesión"
 
+msgid "Cancel"
+msgstr "Cancelar"
+
 msgid "Caps lock is on."
 msgstr "El bloqueo de mayúsculas está activado."
+
+#, fuzzy
+msgid "Change role"
+msgstr "Cambiar el rol"
+
+#, fuzzy
+msgid "Change role to…"
+msgstr "Cambiar el rol a…"
+
+#, fuzzy
+msgid "Change role…"
+msgstr "Cambiar el rol…"
+
+#, fuzzy
+msgid "Changed roles."
+msgstr "Roles cambiados."
+
+#, fuzzy
+msgid "Choose the role of %(name)s."
+msgstr "Elige el rol de %(name)s."
+
+#, fuzzy
+msgid "Choose the role of %s user."
+msgid_plural "Choose the role of %s users."
+msgstr[0] "Elige el rol de %s usuario."
+msgstr[1] "Elige el rol de %s de usuarios."
+msgstr[2] "Elige el rol de %s usuarios."
 
 msgid "Confirm Password"
 msgstr "Confirma la contraseña"
@@ -29,14 +102,12 @@ msgstr "Confirma el uso de una contraseña débil."
 msgid "Continue"
 msgstr "Continuar"
 
+#, fuzzy
+msgid "Created"
+msgstr "Creado"
+
 msgid "Disable"
 msgstr "Desactivar"
-
-msgid "Disable %s"
-msgstr "Desactivar a %s"
-
-msgid "Disabled"
-msgstr "Desactivado"
 
 msgid "Done"
 msgstr "Hecho"
@@ -44,11 +115,14 @@ msgstr "Hecho"
 msgid "Double-check your email address before continuing."
 msgstr "Comprueba bien tu dirección de correo electrónico antes de continuar."
 
+msgid "Email"
+msgstr "Correo electrónico"
+
 msgid "Enable"
 msgstr "Activar"
 
-msgid "Enable %s"
-msgstr "Activar a %s"
+msgid "Generate password"
+msgstr "Generar contraseña"
 
 msgid "Go to login"
 msgstr "Ir al inicio de sesión"
@@ -75,8 +149,12 @@ msgstr "Importante:"
 msgid "Invalid email or password."
 msgstr "Correo o contraseña no válidos."
 
-msgid "Loading users…"
-msgstr "Cargando usuarios…"
+msgid "Invalid user ID."
+msgstr "ID de usuario no válido."
+
+#, fuzzy
+msgid "Invitation sent to \"%(name)s\"."
+msgstr "Invitación enviada a «%(name)s»."
 
 msgid "Loading…"
 msgstr "Cargando…"
@@ -96,8 +174,22 @@ msgstr "No se pudo cerrar sesión, inténtalo de nuevo."
 msgid "Lost your password?"
 msgstr "¿Has olvidado tu contraseña?"
 
+#, fuzzy
+msgid "Manage who can sign in and what they can do."
+msgstr "Gestiona quién puede entrar y qué puede hacer."
+
+msgid "Name"
+msgstr "Nombre"
+
 msgid "No mail server is configured. Deliver the activation link by hand."
 msgstr "No hay servidor de correo configurado. Entrega el enlace de activación a mano."
+
+msgid "No users found."
+msgstr "No se encontraron usuarios."
+
+#, fuzzy
+msgid "No users yet."
+msgstr "Todavía no hay usuarios."
 
 msgid "Password"
 msgstr "Contraseña"
@@ -110,8 +202,29 @@ msgstr "Por favor, copia el código de configuración del archivo y pégalo abaj
 msgid "Please provide a name."
 msgstr "Por favor, facilita un nombre."
 
-msgid "Send invitation"
-msgstr "Enviar invitación"
+#, fuzzy
+msgid "Resend invitation"
+msgstr "Reenviar invitación"
+
+#, fuzzy
+msgid "Resend invitation…"
+msgstr "Reenviar invitación…"
+
+#, fuzzy
+msgid "Role"
+msgstr "Rol"
+
+#, fuzzy
+msgid "Role changed for \"%(name)s\"."
+msgstr "Rol de «%(name)s» cambiado."
+
+#, fuzzy
+msgid "Search users…"
+msgstr "Buscar usuarios…"
+
+#, fuzzy
+msgid "Send a new invitation to \"%(name)s\" (%(email)s)? The link sent before stops working."
+msgstr "¿Enviar una invitación nueva a «%(name)s» (%(email)s)? El enlace anterior dejará de funcionar."
 
 msgid "Send reset link"
 msgstr "Enviar enlace de restablecimiento"
@@ -129,6 +242,10 @@ msgstr "Mostrar"
 msgid "Show password"
 msgstr "Mostrar la contraseña"
 
+#, fuzzy
+msgid "Somebody must be able to manage users."
+msgstr "Alguien tiene que poder gestionar los usuarios."
+
 msgid "Something went wrong."
 msgstr "Algo ha ido mal."
 
@@ -136,9 +253,25 @@ msgstr "Algo ha ido mal."
 msgid "Sorry, that is not a valid email address. Email addresses look like <code>username@example.com</code>."
 msgstr "Lo siento, esa no es una dirección de correo electrónico válida. Las direcciones de correo electrónico deben parecerse a <code>usuario@example.com</code>."
 
+msgid "Sorry, you are not allowed to edit this user."
+msgstr "Lo siento, no tienes permisos para modificar este usuario."
+
+msgid "Sorry, you are not allowed to edit users."
+msgstr "Lo siento, no tienes permisos para editar usuarios."
+
+#, fuzzy
+msgid "Sorry, you are not allowed to give users that role."
+msgstr "Lo siento, no tienes permisos para dar ese rol a los usuarios."
+
+msgid "Status"
+msgstr "Estado"
+
 #, fuzzy
 msgid "The account could not be created, please try again."
 msgstr "No se pudo crear la cuenta, inténtalo de nuevo."
+
+msgid "The email address is not correct."
+msgstr "La dirección de correo electrónico no es correcta."
 
 msgid "The invitation could not be sent."
 msgstr "No se pudo enviar la invitación."
@@ -150,12 +283,38 @@ msgid "The request failed, please try again."
 msgstr "No se pudo completar la petición, inténtalo de nuevo."
 
 #, fuzzy
+msgid "The role could not be changed."
+msgstr "No se ha podido cambiar el rol."
+
+#, fuzzy
+msgid "The role of %s user could not be changed."
+msgid_plural "The roles of %s users could not be changed."
+msgstr[0] "No se ha podido cambiar el rol de %s usuario."
+msgstr[1] "No se han podido cambiar los roles de %s de usuarios."
+msgstr[2] "No se han podido cambiar los roles de %s usuarios."
+
+#, fuzzy
+msgid "The role of that account just changed. Reload the page and try again."
+msgstr "El rol de esa cuenta acaba de cambiar. Recarga la página e inténtalo de nuevo."
+
+#, fuzzy
 msgid "The setup code file cannot be used. Please check it and try again."
 msgstr "No se puede usar el archivo del código de configuración. Por favor, revísalo e inténtalo de nuevo."
 
 #, fuzzy
 msgid "The site is starting. Please wait a moment and try again."
 msgstr "El sitio se está iniciando. Por favor, espera un momento e inténtalo de nuevo."
+
+#, fuzzy
+msgid "The user could not be disabled."
+msgstr "No se ha podido desactivar el usuario."
+
+#, fuzzy
+msgid "The user could not be enabled."
+msgstr "No se ha podido activar el usuario."
+
+msgid "This email is already registered. Please choose another one."
+msgstr "Este correo electrónico ya está registrado. Por favor, elige otro."
 
 msgid "This link is no longer valid. Ask for a new one."
 msgstr "Este enlace ya no es válido. Pide uno nuevo."
@@ -189,15 +348,20 @@ msgstr "Inténtalo de nuevo"
 msgid "Unlock %s"
 msgstr "Desbloquear %s"
 
-msgid "Update failed."
-msgstr "No se pudo actualizar."
-
 msgid "Users could not be loaded."
-msgstr "No se pudieron cargar los usuarios."
+msgstr "No se han podido cargar los usuarios."
 
 #, fuzzy
 msgid "You appear to have already set up this site."
 msgstr "Parece que ya has configurado este sitio."
+
+#, fuzzy
+msgid "You cannot change your own role."
+msgstr "No puedes cambiar tu propio rol."
+
+#, fuzzy
+msgid "You cannot disable your own account."
+msgstr "No puedes desactivar tu propia cuenta."
 
 msgid "You will need this password to log in. Please store it in a secure location."
 msgstr "Necesitas esta contraseña para acceder. Por favor, guárdala en un lugar seguro."
@@ -232,26 +396,6 @@ msgctxt "admin section"
 msgid "Users"
 msgstr "Usuarios"
 
-msgctxt "button"
-msgid "New user"
-msgstr "Nuevo usuario"
-
-msgctxt "column"
-msgid "Email"
-msgstr "Correo"
-
-msgctxt "column"
-msgid "Name"
-msgstr "Nombre"
-
-msgctxt "column"
-msgid "Status"
-msgstr "Estado"
-
-msgctxt "field label"
-msgid "Activation link"
-msgstr "Enlace de activación"
-
 msgctxt "field label"
 msgid "Email"
 msgstr "Correo"
@@ -260,13 +404,9 @@ msgctxt "field label"
 msgid "Name"
 msgstr "Nombre"
 
-msgctxt "page heading"
-msgid "New user"
-msgstr "Nuevo usuario"
-
-msgctxt "page heading"
-msgid "Users"
-msgstr "Usuarios"
+msgctxt "no user roles"
+msgid "None"
+msgstr "Ninguno"
 
 msgctxt "password strength"
 msgid "Medium"
@@ -287,3 +427,21 @@ msgstr "Muy débil"
 msgctxt "password strength"
 msgid "Weak"
 msgstr "Débil"
+
+#, fuzzy
+msgctxt "role"
+msgid "No role"
+msgstr "Sin rol"
+
+msgctxt "user status"
+msgid "Active"
+msgstr "Activo"
+
+msgctxt "user status"
+msgid "Disabled"
+msgstr "Desactivado"
+
+#, fuzzy
+msgctxt "user status"
+msgid "Invited"
+msgstr "Invitado"

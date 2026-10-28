@@ -34,22 +34,24 @@ test('a message carrying a quote is keyed the way the runtime keys it', () => {
 	expect(keysOf(source)).toEqual(['Type "delete" to confirm'])
 })
 
-test('the shipped catalogue translates every string the template asks for', async () => {
-	const catalog = await catalogFor('es-ES')
+test.each(['es-ES', 'fr-FR'])('the %s catalogue translates every string the template asks for', async (locale) => {
+	const catalog = await catalogFor(locale)
 
 	const missing = templateKeys.filter((key) => {
 		const held = catalog?.[key]
 		return !Array.isArray(held) || held[0] === undefined || held[0] === ''
 	})
 
+	expect(catalog).toBeDefined()
 	expect(missing).toEqual([])
 })
 
-test('the shipped catalogue carries nothing the template dropped', async () => {
-	const catalog = await catalogFor('es-ES')
+test.each(['es-ES', 'fr-FR'])('the %s catalogue carries nothing the template dropped', async (locale) => {
+	const catalog = await catalogFor(locale)
 	const wanted = new Set(templateKeys)
 
 	const stale = Object.keys(catalog ?? {}).filter((key) => key !== '' && !wanted.has(key))
 
+	expect(catalog).toBeDefined()
 	expect(stale).toEqual([])
 })
