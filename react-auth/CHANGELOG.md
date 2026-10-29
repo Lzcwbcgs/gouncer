@@ -10,6 +10,12 @@ Releases are tagged `react-auth@X.Y.Z` and publish to npm from CI. The
 npm-style tag stays invisible to the Go toolchain, unlike a
 `react-auth/vX.Y.Z` tag naming the directory's stub module.
 
+## [Unreleased]
+
+### Changed
+
+- `/wpds/users` takes `@gopherium/godmin` 0.29 as well as 0.28 as an optional peer.
+
 ## [0.16.0] - 2026-10-28
 
 ### Added
